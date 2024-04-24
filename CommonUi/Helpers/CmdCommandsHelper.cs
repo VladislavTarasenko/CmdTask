@@ -4,7 +4,7 @@ namespace Common.Helpers;
 
 public static partial class CmdCommandsHelper
 {
-    public const string ErrorMessageForNoInternet = "PING: transmit failed. General failure.";
+    public const string ErrorMessageForNoInternet = "General failure.";
 
     public const string InternetConnectionAvailableMessage = "Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)";
 
@@ -13,6 +13,8 @@ public static partial class CmdCommandsHelper
     private const string WlanInterfacesInfoCommand = "netsh wlan show interfaces";
 
     private const string PingCommand = "ping 8.8.8.8";
+
+    private const string ShowProfilesCommand = "netsh wlan show profiles";
 
     private static string ExecuteCommand(string command, bool runAsAdmin = false)
     {
@@ -39,6 +41,25 @@ public static partial class CmdCommandsHelper
         return output?.Trim();
     }
 
+    private static string GetFirstProfile()
+    {
+        var output = ExecuteCommand(ShowProfilesCommand);
+        var lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+        foreach (var line in lines)
+        {
+            if (line.Contains("All User Profile"))
+            {
+                var parts = line.Split(':');
+                if (parts.Length == 2)
+                {
+                    return parts[1].Trim();
+                }
+            }
+        }
+
+        return null;
+    }
+
     private static string GetEnableInterfaceCommand(string interfaceName)
     {
         return $"netsh interface set interface \"{interfaceName}\" enable";
@@ -57,8 +78,8 @@ public static partial class CmdCommandsHelper
         return $"netsh wlan disconnect interface=\"{interfaceName}\"";
     }
 
-    private static string GetConnectInterfaceCommand(string ssid, string profileName, string interfaceName)
+    private static string GetConnectInterfaceCommand(string profileName, string interfaceName)
     {
-        return $"netsh wlan connect ssid=\"{profileName}\" name=\"{profileName}\" interface=\"{interfaceName}\"";
+        return $"netsh wlan connect name=\"{profileName}\" interface=\"{interfaceName}\"";
     }
 }

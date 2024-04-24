@@ -12,7 +12,6 @@ is unchecked in your Wi-Fi connection settings, as it may affect the test result
 */
 public class UiInternetCheckTests : BaseUiTest
 {
-
     [Test]
     public void TestInternetConnection()
     {

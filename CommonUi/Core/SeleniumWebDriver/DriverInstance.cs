@@ -11,9 +11,9 @@ public class DriverInstance
     {
         if (_driver == null)
         {
-            //var options = new ChromeOptions();
-            //options.AddArgument("--headless");
-            _driver = new ChromeDriver();
+            var options = new ChromeOptions();
+            options.AddArgument("--headless");
+            _driver = new ChromeDriver(options);
             _driver.Manage().Timeouts().ImplicitWait.Add(TimeSpan.FromSeconds(10));
             _driver.Manage().Window.Maximize();
         }

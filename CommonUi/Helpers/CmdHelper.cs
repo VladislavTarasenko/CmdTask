@@ -66,7 +66,8 @@ public static partial class CmdCommandsHelper
         {
             if (!Ping().Contains(InternetConnectionAvailableMessage))
             {
-                ExecuteCommand(GetConnectInterfaceCommand(wlanInterfaceInfo.SSID, wlanInterfaceInfo.Profile, wlanInterfaceInfo.Name));
+                var command = GetConnectInterfaceCommand(wlanInterfaceInfo.Profile ?? GetFirstProfile(), wlanInterfaceInfo.Name);
+                ExecuteCommand(command);
             }
         }
         else
